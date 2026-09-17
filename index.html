@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reader Reach — Flipper Book</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Georgia, "Times New Roman", serif;
+            background: #171311;
+            color: #f5eee5;
+            min-height: 100vh;
+        }
+
+        .app {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* TOP BAR */
+
+        .topbar {
+            height: 72px;
+            background: #211a17;
+            border-bottom: 1px solid #4a3930;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+        }
+
+        .brand {
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .book-label {
+            color: #caa77d;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* MAIN READER */
+
+        .reader {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 240px 1fr 240px;
+            min-height: calc(100vh - 72px);
+        }
+
+        /* LEFT SIDEBAR */
+
+        .sidebar {
+            background: #1c1614;
+            border-right: 1px solid #3d3029;
+            padding: 28px 20px;
+        }
+
+        .sidebar h3 {
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #caa77d;
+            margin-bottom: 24px;
+        }
+
+        .chapter {
+            padding: 13px 12px;
+            border-radius: 5px;
+            margin-bottom: 6px;
+            color: #b7aaa1;
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .chapter.active {
+            background: #342821;
+            color: #f4e8da;
+        }
+
+        /* BOOK */
+
+        .book-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 30px;
+            background:
+                radial-gradient(circle at center, #2b211c 0%, #171311 70%);
+        }
+
+        .book {
+            width: min(720px, 100%);
+            min-height: 650px;
+            background: #f7f0e6;
+            color: #30231d;
+            box-shadow:
+                0 25px 70px rgba(0, 0, 0, 0.55),
+                0 0 0 1px rgba(255,255,255,0.04);
+            position: relative;
+            padding: 70px 75px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-top {
+            font-family: Arial, sans-serif;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #92745b;
+            margin-bottom: 70px;
+        }
+
+        .book h1 {
+            font-size: clamp(38px, 5vw, 62px);
+            line-height: 1.05;
+            font-weight: 400;
+            margin-bottom: 24px;
+        }
+
+        .book .author {
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            color: #776257;
+            letter-spacing: 1px;
+            margin-bottom: 55px;
+        }
+
+        .book p {
+            font-size: 18px;
+            line-height: 1.85;
+            color: #514139;
+            max-width: 580px;
+        }
+
+        .book-footer {
+            margin-top: auto;
+            padding-top: 50px;
+            display: flex;
+            justify-content: space-between;
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            color: #92745b;
+        }
+
+        /* RIGHT PANEL */
+
+        .info-panel {
+            background: #1c1614;
+            border-left: 1px solid #3d3029;
+            padding: 30px 22px;
+        }
+
+        .info-panel h3 {
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #caa77d;
+            margin-bottom: 22px;
+        }
+
+        .info-card {
+            background: #241c18;
+            border: 1px solid #3d3029;
+            padding: 18px;
+            margin-bottom: 14px;
+        }
+
+        .info-card small {
+            display: block;
+            color: #897970;
+            font-family: Arial, sans-serif;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .info-card strong {
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        /* CONTROLS */
+
+        .controls {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: #211a17;
+            border: 1px solid #4a3930;
+            padding: 10px 14px;
+            border-radius: 40px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.45);
+        }
+
+        .controls button {
+            border: none;
+            background: transparent;
+            color: #f5eee5;
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 20px;
+        }
+
+        .controls button:hover {
+            background: #342821;
+        }
+
+        .page-number {
+            color: #caa77d;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 900px) {
+            .reader {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar,
+            .info-panel {
+                display: none;
+            }
+
+            .book-area {
+                padding: 25px 15px 100px;
+            }
+
+            .book {
+                min-height: 620px;
+                padding: 45px 35px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <header class="topbar">
+        <div class="brand">READER REACH</div>
+        <div class="book-label">Flipper Book</div>
+    </header>
+
+    <main class="reader">
+
+        <aside class="sidebar">
+            <h3>Contents</h3>
+
+            <div class="chapter active">
+                Opening
+            </div>
+
+            <div class="chapter">
+                Chapter 01
+            </div>
+
+            <div class="chapter">
+                Chapter 02
+            </div>
+
+            <div class="chapter">
+                Chapter 03
+            </div>
+
+            <div class="chapter">
+                Chapter 04
+            </div>
+        </aside>
+
+        <section class="book-area">
+
+            <article class="book">
+
+                <div class="book-top">
+                    Reader Reach · Flipper Book
+                </div>
+
+                <h1>Book Title</h1>
+
+                <div class="author">
+                    By Author Name
+                </div>
+
+                <p>
+                    This is where the approved Flipper Book content
+                    will appear. The author will provide a shortened
+                    20–25 page version of their book for readers to
+                    explore before joining the discussion.
+                </p>
+
+                <div class="book-footer">
+                    <span>Reader Reach</span>
+                    <span>01</span>
+                </div>
+
+            </article>
+
+        </section>
+
+        <aside class="info-panel">
+
+            <h3>Book Details</h3>
+
+            <div class="info-card">
+                <small>Author</small>
+                <strong>Author Name</strong>
+            </div>
+
+            <div class="info-card">
+                <small>Genre</small>
+                <strong>Genre / Topic</strong>
+            </div>
+
+            <div class="info-card">
+                <small>Format</small>
+                <strong>Flipper Book</strong>
+            </div>
+
+            <div class="info-card">
+                <small>Access</small>
+                <strong>Approved Readers</strong>
+            </div>
+
+        </aside>
+
+    </main>
+
+    <div class="controls">
+        <button onclick="previousPage()">← Previous</button>
+
+        <div class="page-number">
+            Page <span id="pageNumber">1</span> / 20
+        </div>
+
+        <button onclick="nextPage()">Next →</button>
+    </div>
+
+</div>
+
+<script>
+
+    let currentPage = 1;
+
+    function nextPage() {
+        if (currentPage < 20) {
+            currentPage++;
+            document.getElementById("pageNumber").textContent = currentPage;
+        }
+    }
+
+    function previousPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            document.getElementById("pageNumber").textContent = currentPage;
+        }
+    }
+
+</script>
+
+</body>
+</html>
