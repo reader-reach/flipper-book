@@ -1,389 +1,984 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reader Reach — Flipper Book</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+<title>How To Kill A Man — Emily B. | Reader Reach</title>
 
-        body {
-            font-family: Georgia, "Times New Roman", serif;
-            background: #171311;
-            color: #f5eee5;
-            min-height: 100vh;
-        }
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-        .app {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+body {
+    font-family: Georgia, "Times New Roman", serif;
+    background: #171311;
+    color: #f5eee5;
+    min-height: 100vh;
+}
 
-        /* TOP BAR */
+.app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
 
-        .topbar {
-            height: 72px;
-            background: #211a17;
-            border-bottom: 1px solid #4a3930;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 28px;
-        }
+/* TOP BAR */
 
-        .brand {
-            font-family: Arial, sans-serif;
-            font-size: 18px;
-            font-weight: 700;
-            letter-spacing: 2px;
-        }
+.topbar {
+    height: 72px;
+    background: #211a17;
+    border-bottom: 1px solid #4a3930;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+}
 
-        .book-label {
-            color: #caa77d;
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
+.brand {
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
 
-        /* MAIN READER */
+.book-label {
+    color: #caa77d;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
 
-        .reader {
-            flex: 1;
-            display: grid;
-            grid-template-columns: 240px 1fr 240px;
-            min-height: calc(100vh - 72px);
-        }
+/* READER */
 
-        /* LEFT SIDEBAR */
+.reader {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 240px 1fr 240px;
+    min-height: calc(100vh - 72px);
+}
 
-        .sidebar {
-            background: #1c1614;
-            border-right: 1px solid #3d3029;
-            padding: 28px 20px;
-        }
+/* LEFT */
 
-        .sidebar h3 {
-            font-family: Arial, sans-serif;
-            font-size: 11px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #caa77d;
-            margin-bottom: 24px;
-        }
+.sidebar {
+    background: #1c1614;
+    border-right: 1px solid #3d3029;
+    padding: 28px 20px;
+}
 
-        .chapter {
-            padding: 13px 12px;
-            border-radius: 5px;
-            margin-bottom: 6px;
-            color: #b7aaa1;
-            font-family: Arial, sans-serif;
-            font-size: 13px;
-            cursor: pointer;
-        }
+.sidebar h3,
+.info-panel h3 {
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #caa77d;
+    margin-bottom: 24px;
+}
 
-        .chapter.active {
-            background: #342821;
-            color: #f4e8da;
-        }
+.chapter {
+    padding: 13px 12px;
+    border-radius: 5px;
+    margin-bottom: 6px;
+    color: #b7aaa1;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: .2s;
+}
 
-        /* BOOK */
+.chapter:hover,
+.chapter.active {
+    background: #342821;
+    color: #f4e8da;
+}
 
-        .book-area {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 50px 30px;
-            background:
-                radial-gradient(circle at center, #2b211c 0%, #171311 70%);
-        }
+/* BOOK AREA */
 
-        .book {
-            width: min(720px, 100%);
-            min-height: 650px;
-            background: #f7f0e6;
-            color: #30231d;
-            box-shadow:
-                0 25px 70px rgba(0, 0, 0, 0.55),
-                0 0 0 1px rgba(255,255,255,0.04);
-            position: relative;
-            padding: 70px 75px;
-            display: flex;
-            flex-direction: column;
-        }
+.book-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 45px 30px 110px;
 
-        .book-top {
-            font-family: Arial, sans-serif;
-            font-size: 10px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #92745b;
-            margin-bottom: 70px;
-        }
+    background:
+        radial-gradient(
+            circle at center,
+            #2b211c 0%,
+            #171311 70%
+        );
+}
 
-        .book h1 {
-            font-size: clamp(38px, 5vw, 62px);
-            line-height: 1.05;
-            font-weight: 400;
-            margin-bottom: 24px;
-        }
+/* BOOK */
 
-        .book .author {
-            font-family: Arial, sans-serif;
-            font-size: 13px;
-            color: #776257;
-            letter-spacing: 1px;
-            margin-bottom: 55px;
-        }
+.book {
+    width: min(720px, 100%);
+    min-height: 650px;
 
-        .book p {
-            font-size: 18px;
-            line-height: 1.85;
-            color: #514139;
-            max-width: 580px;
-        }
+    background: #f7f0e6;
+    color: #30231d;
 
-        .book-footer {
-            margin-top: auto;
-            padding-top: 50px;
-            display: flex;
-            justify-content: space-between;
-            font-family: Arial, sans-serif;
-            font-size: 11px;
-            color: #92745b;
-        }
+    box-shadow:
+        0 25px 70px rgba(0,0,0,.55),
+        0 0 0 1px rgba(255,255,255,.04);
 
-        /* RIGHT PANEL */
+    position: relative;
 
-        .info-panel {
-            background: #1c1614;
-            border-left: 1px solid #3d3029;
-            padding: 30px 22px;
-        }
+    padding: 70px 75px;
 
-        .info-panel h3 {
-            font-family: Arial, sans-serif;
-            font-size: 11px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #caa77d;
-            margin-bottom: 22px;
-        }
+    display: none;
+    flex-direction: column;
+}
 
-        .info-card {
-            background: #241c18;
-            border: 1px solid #3d3029;
-            padding: 18px;
-            margin-bottom: 14px;
-        }
+.book.active {
+    display: flex;
+}
 
-        .info-card small {
-            display: block;
-            color: #897970;
-            font-family: Arial, sans-serif;
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-        }
+/* COVER */
 
-        .info-card strong {
-            font-size: 14px;
-            font-weight: 400;
-        }
+.cover {
+    background:
+        linear-gradient(
+            145deg,
+            #241814,
+            #4a2f23 55%,
+            #1d1411
+        );
 
-        /* CONTROLS */
+    color: #f7eee2;
 
-        .controls {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            background: #211a17;
-            border: 1px solid #4a3930;
-            padding: 10px 14px;
-            border-radius: 40px;
-            box-shadow: 0 12px 35px rgba(0,0,0,0.45);
-        }
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 
-        .controls button {
-            border: none;
-            background: transparent;
-            color: #f5eee5;
-            font-family: Arial, sans-serif;
-            font-size: 13px;
-            cursor: pointer;
-            padding: 8px 12px;
-            border-radius: 20px;
-        }
+    overflow: hidden;
+}
 
-        .controls button:hover {
-            background: #342821;
-        }
+.cover::before {
+    content: "";
+    position: absolute;
+    inset: 22px;
+    border: 1px solid rgba(218,186,143,.45);
+}
 
-        .page-number {
-            color: #caa77d;
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-            min-width: 70px;
-            text-align: center;
-        }
+.cover-label {
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #d6b78d;
+    margin-bottom: 65px;
+    position: relative;
+    z-index: 2;
+}
 
-        /* MOBILE */
+.cover-title {
+    font-size: clamp(42px, 6vw, 70px);
+    line-height: .98;
+    font-weight: 400;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 2;
+}
 
-        @media (max-width: 900px) {
-            .reader {
-                grid-template-columns: 1fr;
-            }
+.cover-author {
+    margin-top: 55px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #d6b78d;
+    position: relative;
+    z-index: 2;
+}
 
-            .sidebar,
-            .info-panel {
-                display: none;
-            }
+.cover-footer {
+    position: absolute;
+    bottom: 45px;
+    font-family: Arial, sans-serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #bca084;
+}
 
-            .book-area {
-                padding: 25px 15px 100px;
-            }
+/* CONTENT */
 
-            .book {
-                min-height: 620px;
-                padding: 45px 35px;
-            }
-        }
-    </style>
+.book-top {
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #92745b;
+    margin-bottom: 45px;
+}
+
+.book h1 {
+    font-size: clamp(34px, 5vw, 55px);
+    line-height: 1.05;
+    font-weight: 400;
+    margin-bottom: 24px;
+}
+
+.author {
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    color: #776257;
+    letter-spacing: 1px;
+    margin-bottom: 38px;
+}
+
+.book p {
+    font-size: 18px;
+    line-height: 1.85;
+    color: #514139;
+    max-width: 580px;
+    margin-bottom: 20px;
+}
+
+.book-footer {
+    margin-top: auto;
+    padding-top: 40px;
+
+    display: flex;
+    justify-content: space-between;
+
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    color: #92745b;
+}
+
+/* RIGHT PANEL */
+
+.info-panel {
+    background: #1c1614;
+    border-left: 1px solid #3d3029;
+    padding: 30px 22px;
+}
+
+.info-card {
+    background: #241c18;
+    border: 1px solid #3d3029;
+    padding: 18px;
+    margin-bottom: 14px;
+}
+
+.info-card small {
+    display: block;
+    color: #897970;
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.info-card strong {
+    font-size: 14px;
+    font-weight: 400;
+}
+
+/* CONTROLS */
+
+.controls {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    background: #211a17;
+    border: 1px solid #4a3930;
+
+    padding: 10px 14px;
+    border-radius: 40px;
+
+    box-shadow: 0 12px 35px rgba(0,0,0,.45);
+
+    z-index: 50;
+}
+
+.controls button {
+    border: none;
+    background: transparent;
+
+    color: #f5eee5;
+
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+
+    cursor: pointer;
+
+    padding: 8px 12px;
+    border-radius: 20px;
+}
+
+.controls button:hover {
+    background: #342821;
+}
+
+.controls button:disabled {
+    opacity: .35;
+    cursor: not-allowed;
+}
+
+.page-number {
+    color: #caa77d;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    min-width: 75px;
+    text-align: center;
+}
+
+/* MOBILE */
+
+@media (max-width: 900px) {
+
+    .reader {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar,
+    .info-panel {
+        display: none;
+    }
+
+    .book-area {
+        padding: 25px 15px 110px;
+    }
+
+    .book {
+        min-height: 620px;
+        padding: 45px 35px;
+    }
+
+    .cover::before {
+        inset: 15px;
+    }
+}
+</style>
 </head>
 
 <body>
 
 <div class="app">
 
-    <header class="topbar">
-        <div class="brand">READER REACH</div>
-        <div class="book-label">Flipper Book</div>
-    </header>
+<header class="topbar">
 
-    <main class="reader">
-
-        <aside class="sidebar">
-            <h3>Contents</h3>
-
-            <div class="chapter active">
-                Opening
-            </div>
-
-            <div class="chapter">
-                Chapter 01
-            </div>
-
-            <div class="chapter">
-                Chapter 02
-            </div>
-
-            <div class="chapter">
-                Chapter 03
-            </div>
-
-            <div class="chapter">
-                Chapter 04
-            </div>
-        </aside>
-
-        <section class="book-area">
-
-            <article class="book">
-
-                <div class="book-top">
-                    Reader Reach · Flipper Book
-                </div>
-
-                <h1>Book Title</h1>
-
-                <div class="author">
-                    By Author Name
-                </div>
-
-                <p>
-                    This is where the approved Flipper Book content
-                    will appear. The author will provide a shortened
-                    20–25 page version of their book for readers to
-                    explore before joining the discussion.
-                </p>
-
-                <div class="book-footer">
-                    <span>Reader Reach</span>
-                    <span>01</span>
-                </div>
-
-            </article>
-
-        </section>
-
-        <aside class="info-panel">
-
-            <h3>Book Details</h3>
-
-            <div class="info-card">
-                <small>Author</small>
-                <strong>Author Name</strong>
-            </div>
-
-            <div class="info-card">
-                <small>Genre</small>
-                <strong>Genre / Topic</strong>
-            </div>
-
-            <div class="info-card">
-                <small>Format</small>
-                <strong>Flipper Book</strong>
-            </div>
-
-            <div class="info-card">
-                <small>Access</small>
-                <strong>Approved Readers</strong>
-            </div>
-
-        </aside>
-
-    </main>
-
-    <div class="controls">
-        <button onclick="previousPage()">← Previous</button>
-
-        <div class="page-number">
-            Page <span id="pageNumber">1</span> / 20
-        </div>
-
-        <button onclick="nextPage()">Next →</button>
+    <div class="brand">
+        READER REACH
     </div>
+
+    <div class="book-label">
+        Flipper Book
+    </div>
+
+</header>
+
+
+<main class="reader">
+
+
+<!-- LEFT CONTENT -->
+
+<aside class="sidebar">
+
+<h3>Contents</h3>
+
+<div class="chapter active" onclick="goToPage(1)">
+    Cover
+</div>
+
+<div class="chapter" onclick="goToPage(2)">
+    Opening
+</div>
+
+<div class="chapter" onclick="goToPage(6)">
+    Chapter 01
+</div>
+
+<div class="chapter" onclick="goToPage(10)">
+    Chapter 02
+</div>
+
+<div class="chapter" onclick="goToPage(14)">
+    Chapter 03
+</div>
+
+<div class="chapter" onclick="goToPage(18)">
+    Chapter 04
+</div>
+
+</aside>
+
+
+<!-- BOOK -->
+
+<section class="book-area">
+
+
+<!-- PAGE 1 -->
+
+<article class="book cover active" id="page1">
+
+    <div class="cover-label">
+        Reader Reach · Flipper Book
+    </div>
+
+    <div class="cover-title">
+        How To<br>
+        Kill A Man
+    </div>
+
+    <div class="cover-author">
+        Emily B.
+    </div>
+
+    <div class="cover-footer">
+        Reader Reach
+    </div>
+
+</article>
+
+
+<!-- PAGE 2 -->
+
+<article class="book" id="page2">
+
+    <div class="book-top">
+        How To Kill A Man
+    </div>
+
+    <h1>Opening</h1>
+
+    <div class="author">
+        Emily B.
+    </div>
+
+    <p>
+        This is the beginning of Emily B.'s book.
+    </p>
+
+    <p>
+        The approved book content will begin on this page,
+        immediately after the cover.
+    </p>
+
+    <div class="book-footer">
+        <span>Emily B.</span>
+        <span>02</span>
+    </div>
+
+</article>
+
+
+<!-- PAGE 3 -->
+
+<article class="book" id="page3">
+
+    <div class="book-top">
+        How To Kill A Man
+    </div>
+
+    <h1>Page Three</h1>
+
+    <p>
+        Existing book content will appear here.
+    </p>
+
+    <div class="book-footer">
+        <span>Emily B.</span>
+        <span>03</span>
+    </div>
+
+</article>
+
+
+<!-- PAGE 4 -->
+
+<article class="book" id="page4">
+
+    <div class="book-top">
+        How To Kill A Man
+    </div>
+
+    <h1>Page Four</h1>
+
+    <p>
+        Existing book content will appear here.
+    </p>
+
+    <div class="book-footer">
+        <span>Emily B.</span>
+        <span>04</span>
+    </div>
+
+</article>
+
+
+<!-- PAGE 5 -->
+
+<article class="book" id="page5">
+
+    <div class="book-top">
+        How To Kill A Man
+    </div>
+
+    <h1>Page Five</h1>
+
+    <p>
+        Existing book content will appear here.
+    </p>
+
+    <div class="book-footer">
+        <span>Emily B.</span>
+        <span>05</span>
+    </div>
+
+</article>
+
+
+<!-- PAGE 6 -->
+
+<article class="book" id="page6">
+
+    <div class="book-top">
+        Chapter 01
+    </div>
+
+    <h1>Chapter 01</h1>
+
+    <p>
+        Chapter One begins here.
+    </p>
+
+    <div class="book-footer">
+        <span>Emily B.</span>
+        <span>06</span>
+    </div>
+
+</article>
+
+
+<!-- PAGE 7 -->
+
+<article class="book" id="page7">
+
+    <div class="book-top">How To Kill A Man</div>
+
+    <h1>Page Seven</h1>
+
+    <p>Existing book content will appear here.</p>
+
+    <div class="book-footer">
+        <span>Emily B.</span>
+        <span>07</span>
+    </div>
+
+</article>
+
+
+<!-- PAGE 8 -->
+
+<article class="book" id="page8">
+
+    <div class="book-top">How To Kill A Man</div>
+
+    <h1>Page Eight</h1>
+
+    <p>Existing book content will appear here.</p>
+
+    <div class="book-footer">
+        <span>Emily B.</span>
+        <span>08</span>
+    </div>
+
+</article>
+
+
+<!-- PAGE 9 -->
+
+<article class="book" id="page9">
+
+    <div class="book-top">How To Kill A Man</div>
+
+    <h1>Page Nine</h1>
+
+    <p>Existing book content will appear here.</p>
+
+    <div class="book-footer">
+        <span>Emily B.</span>
+        <span>09</span>
+    </div>
+
+</article>
+
+
+<!-- PAGE 10 -->
+
+<article class="book" id="page10">
+
+    <div class="book-top">
+        Chapter 02
+    </div>
+
+    <h1>Chapter 02</h1>
+
+    <p>
+        Chapter Two begins here.
+    </p>
+
+    <div class="book-footer">
+        <span>Emily B.</span>
+        <span>10</span>
+    </div>
+
+</article>
+
+
+<!-- PAGE 11 -->
+
+<article class="book" id="page11">
+
+    <div class="book-top">How To Kill A Man</div>
+
+    <h1>Page Eleven</h1>
+
+    <p>Existing book content will appear here.</p>
+
+    <div class="book-footer">
+        <span>Emily B.</span>
+        <span>11</span>
+    </div>
+
+</article>
+
+
+<!-- PAGE 12 -->
+
+<article class="book" id="page12">
+
+    <div class="book-top">How To Kill A Man</div>
+
+    <h1>Page Twelve</h1>
+
+    <p>Existing book content will appear here.</p>
+
+    <div class="book-footer">
+        <span>Emily B.</span>
+        <span>12</span>
+    </div>
+
+</article>
+
+
+<!-- PAGE 13 -->
+
+<article class="book" id="page13">
+
+    <div class="book-top">How To Kill A Man</div>
+
+    <h1>Page Thirteen</h1>
+
+    <p>Existing book content will appear here.</p>
+
+    <div class="book-footer">
+        <span>Emily B.</span>
+        <span>13</span>
+    </div>
+
+</article>
+
+
+<!-- PAGE 14 -->
+
+<article class="book" id="page14">
+
+    <div class="book-top">
+        Chapter 03
+    </div>
+
+    <h1>Chapter 03</h1>
+
+    <p>
+        Chapter Three begins here.
+    </p>
+
+    <div class="book-footer">
+        <span>Emily B.</span>
+        <span>14</span>
+    </div>
+
+</article>
+
+
+<!-- PAGE 15 -->
+
+<article class="book" id="page15">
+
+    <div class="book-top">How To Kill A Man</div>
+
+    <h1>Page Fifteen</h1>
+
+    <p>Existing book content will appear here.</p>
+
+    <div class="book-footer">
+        <span>Emily B.</span>
+        <span>15</span>
+    </div>
+
+</article>
+
+
+<!-- PAGE 16 -->
+
+<article class="book" id="page16">
+
+    <div class="book-top">How To Kill A Man</div>
+
+    <h1>Page Sixteen</h1>
+
+    <p>Existing book content will appear here.</p>
+
+    <div class="book-footer">
+        <span>Emily B.</span>
+        <span>16</span>
+    </div>
+
+</article>
+
+
+<!-- PAGE 17 -->
+
+<article class="book" id="page17">
+
+    <div class="book-top">How To Kill A Man</div>
+
+    <h1>Page Seventeen</h1>
+
+    <p>Existing book content will appear here.</p>
+
+    <div class="book-footer">
+        <span>Emily B.</span>
+        <span>17</span>
+    </div>
+
+</article>
+
+
+<!-- PAGE 18 -->
+
+<article class="book" id="page18">
+
+    <div class="book-top">
+        Chapter 04
+    </div>
+
+    <h1>Chapter 04</h1>
+
+    <p>
+        Chapter Four begins here.
+    </p>
+
+    <div class="book-footer">
+        <span>Emily B.</span>
+        <span>18</span>
+    </div>
+
+</article>
+
+
+<!-- PAGE 19 -->
+
+<article class="book" id="page19">
+
+    <div class="book-top">How To Kill A Man</div>
+
+    <h1>Page Nineteen</h1>
+
+    <p>Existing book content will appear here.</p>
+
+    <div class="book-footer">
+        <span>Emily B.</span>
+        <span>19</span>
+    </div>
+
+</article>
+
+
+<!-- PAGE 20 -->
+
+<article class="book" id="page20">
+
+    <div class="book-top">How To Kill A Man</div>
+
+    <h1>The End</h1>
+
+    <p>
+        End of the Flipper Book preview.
+    </p>
+
+    <div class="book-footer">
+        <span>Emily B.</span>
+        <span>20</span>
+    </div>
+
+</article>
+
+
+</section>
+
+
+<!-- RIGHT INFORMATION -->
+
+<aside class="info-panel">
+
+<h3>Book Details</h3>
+
+<div class="info-card">
+    <small>Author</small>
+    <strong>Emily B.</strong>
+</div>
+
+<div class="info-card">
+    <small>Book Title</small>
+    <strong>How To Kill A Man</strong>
+</div>
+
+<div class="info-card">
+    <small>Format</small>
+    <strong>Flipper Book</strong>
+</div>
+
+<div class="info-card">
+    <small>Access</small>
+    <strong>Approved Readers</strong>
+</div>
+
+</aside>
+
+</main>
+
+
+<!-- CONTROLS -->
+
+<div class="controls">
+
+<button id="previousButton" onclick="previousPage()">
+    ← Previous
+</button>
+
+<div class="page-number">
+    Page <span id="pageNumber">1</span> / 20
+</div>
+
+<button id="nextButton" onclick="nextPage()">
+    Next →
+</button>
 
 </div>
 
+</div>
+
+
 <script>
 
-    let currentPage = 1;
+let currentPage = 1;
 
-    function nextPage() {
-        if (currentPage < 20) {
-            currentPage++;
-            document.getElementById("pageNumber").textContent = currentPage;
-        }
+const totalPages = 20;
+
+
+function showPage(page) {
+
+    document.querySelectorAll(".book").forEach(function(book) {
+        book.classList.remove("active");
+    });
+
+    const selectedPage =
+        document.getElementById("page" + page);
+
+    if (selectedPage) {
+        selectedPage.classList.add("active");
     }
 
-    function previousPage() {
-        if (currentPage > 1) {
-            currentPage--;
-            document.getElementById("pageNumber").textContent = currentPage;
-        }
+    document.getElementById("pageNumber").textContent = page;
+
+    document.getElementById("previousButton").disabled =
+        page === 1;
+
+    document.getElementById("nextButton").disabled =
+        page === totalPages;
+
+
+    document.querySelectorAll(".chapter").forEach(function(item) {
+        item.classList.remove("active");
+    });
+
+
+    if (page === 1) {
+        document.querySelectorAll(".chapter")[0].classList.add("active");
     }
+
+    else if (page >= 2 && page <= 5) {
+        document.querySelectorAll(".chapter")[1].classList.add("active");
+    }
+
+    else if (page >= 6 && page <= 9) {
+        document.querySelectorAll(".chapter")[2].classList.add("active");
+    }
+
+    else if (page >= 10 && page <= 13) {
+        document.querySelectorAll(".chapter")[3].classList.add("active");
+    }
+
+    else if (page >= 14 && page <= 17) {
+        document.querySelectorAll(".chapter")[4].classList.add("active");
+    }
+
+    else if (page >= 18) {
+        document.querySelectorAll(".chapter")[5].classList.add("active");
+    }
+}
+
+
+function nextPage() {
+
+    if (currentPage < totalPages) {
+
+        currentPage++;
+
+        showPage(currentPage);
+    }
+}
+
+
+function previousPage() {
+
+    if (currentPage > 1) {
+
+        currentPage--;
+
+        showPage(currentPage);
+    }
+}
+
+
+function goToPage(page) {
+
+    currentPage = page;
+
+    showPage(currentPage);
+}
+
+
+showPage(1);
 
 </script>
 
